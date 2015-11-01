@@ -9,7 +9,13 @@ class AbstractProvider
     ###*
      * The class selectors for which linting triggers.
     ###
-    grammarScopes: ['source.php']
+    grammarScopes: null
+
+    ###*
+     * The class selectors for which linting triggers in the provider. Multiple scopes must not overlap for best
+     # results.
+    ###
+    grammarScopes: null
 
     ###*
      * The scope that this linter applies to.
@@ -37,6 +43,7 @@ class AbstractProvider
      * @param {Config} config
     ###
     constructor: (@config) ->
+        @grammarScopes = ['source.php']
 
     ###*
      * Initializes this provider.
@@ -67,11 +74,76 @@ class AbstractProvider
             resolve(suggestions)
 
     ###*
-     * Preforms the actual linting in the specified file.
+     * Performs the actual linting in the specified file.
      *
      * @param {TextEditor} editor
      *
      * @return {array}
     ###
     performLinting: (editor) ->
+        messages = []
+
+        rangeEnd = null
+        rangeStart = null
+
+        for line in [0 .. editor.getLineCount() - 1]
+            lineText = editor.lineTextForBufferRow(line)
+
+            for i in [0 .. lineText.length - 1]
+                scopeDescriptor = editor.scopeDescriptorForBufferPosition([line, i]).getScopeChain()
+
+                matchesScopes = false
+
+                for scope in @scopes
+                    if scopeDescriptor.indexOf(scope) != -1
+                        matchesScopes = true
+                        break
+
+                if matchesScopes and not rangeStart
+                    rangeStart =
+                        row    : line
+                        column : i
+
+                else if not matchesScopes and rangeStart
+                    rangeEnd =
+                        row    : line
+                        column : i
+
+                    textInRange = editor.getTextInBufferRange([rangeStart, rangeEnd]).trim()
+
+                    message = @performLintingAt(editor, rangeStart, rangeEnd, textInRange, scopeDescriptor)
+
+                    if message
+                        if not message.range    then message.range = [rangeStart, rangeEnd]
+                        if not message.filePath then message.filePath = editor.getPath()
+
+                        messages.push(message)
+
+                    i = rangeEnd.column
+
+                    if rangeEnd.row != line
+                        line = rangeEnd.row
+                        lineText = editor.lineTextForBufferRow(line)
+
+                    rangeStart = null
+                    rangeEnd = null
+
+        # TODO: Look at confining the grammarScope of each provider individually.
+        # TODO: Look at doing this async later (and resolving the promise when done).
+
+        return messages
+
+    ###*
+     * Performs linting at the specified location.
+     *
+     * @param {TextEditor} editor
+     * @param {Point}      rangeStart
+     * @param {Point}      rangeEnd
+     * @param {string}     text
+     * @param {string}     scopeDescriptor
+     *
+     * @return {Object|null} Either an object for linter or null if there is nothing to report. The range and filePath
+     *                       will be automatically set if omitted.
+    ###
+    performLintingAt: (editor, rangeStart, rangeEnd, text, scopeDescriptor) ->
         throw new Error("This method is abstract and must be implemented!")
