@@ -7,7 +7,7 @@ module.exports =
 ##
 class AbstractProvider
     ###*
-     * The class selectors for which linting triggers.
+     * The grammar scope selectors for which linting triggers. This must be a root scope, such as .source.php.
     ###
     grammarScopes: null
 
@@ -15,7 +15,7 @@ class AbstractProvider
      * The class selectors for which linting triggers in the provider. Multiple scopes must not overlap for best
      # results.
     ###
-    grammarScopes: null
+    scopes: null
 
     ###*
      * The scope that this linter applies to.
@@ -127,9 +127,6 @@ class AbstractProvider
 
                     rangeStart = null
                     rangeEnd = null
-
-        # TODO: Look at confining the grammarScope of each provider individually.
-        # TODO: Look at doing this async later (and resolving the promise when done).
 
         return messages
 
