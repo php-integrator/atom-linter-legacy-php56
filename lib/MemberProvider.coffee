@@ -5,7 +5,7 @@ AbstractProvider = require "./AbstractProvider"
 module.exports =
 
 ##*
-# Provides autocompletion for members of variables such as after ->, ::.
+# Provides linting for class members.
 ##
 class MemberProvider extends AbstractProvider
     ###*
