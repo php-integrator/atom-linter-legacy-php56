@@ -21,19 +21,18 @@ class MethodProvider extends AbstractProvider
         calledClassInfo = null
         calledClass = @service.getCalledClass(editor, rangeStart)
 
-        if calledClass
-            calledClassInfo = @service.getClassInfo(calledClass)
+        return null if not calledClass
 
-        if calledClassInfo?.wasFound
-            method = @service.getClassMethod(calledClass, text)
+        return @service.getClassInfo(calledClass, true).then (calledClassInfo) =>
+            if calledClassInfo?.wasFound
+                method = @service.getClassMethod(calledClass, text)
 
-            if not method
-                message = "<strong>#{calledClass}</strong> has no method <strong>#{text}</strong>"
+                if not method
+                    message = "<strong>#{calledClass}</strong> has no method <strong>#{text}</strong>"
 
-                return {
-                    type : 'Error'
-                    html : message
-                }
-
-        else
-            # TODO: The class is unknown, that is another error, which should be caught by a ClassProvider.
+                    return {
+                        type     : 'Error'
+                        html     : message
+                        range    : [rangeStart, rangeEnd]
+                        filePath : editor.getPath()
+                    }

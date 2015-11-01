@@ -38,6 +38,8 @@ class ClassProvider extends AbstractProvider
                     [rangeStart.row, rangeStart.column]
                 ])
 
+                rangeStart = bufferPosition
+
                 text = namespace + text
 
         # Callable is identified as class. See also https://github.com/atom/language-php/issues/108 .
@@ -45,15 +47,15 @@ class ClassProvider extends AbstractProvider
 
         fullClassName = @service.determineFullClassName(editor, text)
 
-        calledClassInfo = null
+        return null if not fullClassName
 
-        if fullClassName
-            calledClassInfo = @service.getClassInfo(fullClassName)
+        return @service.getClassInfo(fullClassName, true).then (calledClassInfo) =>
+            if not calledClassInfo?.wasFound
+                message = "<strong>#{text}</strong> does not exist"
 
-        if not calledClassInfo?.wasFound
-            message = "<strong>#{text}</strong> does not exist"
-
-            return {
-                type : 'Error'
-                html : message
-            }
+                return {
+                    type     : 'Error'
+                    html     : message
+                    range    : [rangeStart, rangeEnd]
+                    filePath : editor.getPath()
+                }

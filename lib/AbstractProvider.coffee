@@ -65,23 +65,23 @@ class AbstractProvider
      * @return {Promise|array}
     ###
     lint: (editor) ->
-        return new Promise (resolve, reject) =>
-            suggestions = @performLinting(editor)
+        promises = @performLinting(editor)
 
-            if not suggestions
-                suggestions = []
+        return Promise.all(promises).then (messages) =>
+            messages = messages.filter (value) ->
+                return !!value
 
-            resolve(suggestions)
+            return messages
 
     ###*
      * Performs the actual linting in the specified file.
      *
      * @param {TextEditor} editor
      *
-     * @return {array}
+     * @return {array} An array of promises.
     ###
     performLinting: (editor) ->
-        messages = []
+        promises = []
 
         rangeEnd = null
         rangeStart = null
@@ -111,13 +111,9 @@ class AbstractProvider
 
                     textInRange = editor.getTextInBufferRange([rangeStart, rangeEnd]).trim()
 
-                    message = @performLintingAt(editor, rangeStart, rangeEnd, textInRange, scopeDescriptor)
+                    promise = @performLintingAt(editor, rangeStart, rangeEnd, textInRange, scopeDescriptor)
 
-                    if message
-                        if not message.range    then message.range = [rangeStart, rangeEnd]
-                        if not message.filePath then message.filePath = editor.getPath()
-
-                        messages.push(message)
+                    if promise then promises.push(promise)
 
                     i = rangeEnd.column
 
@@ -128,7 +124,7 @@ class AbstractProvider
                     rangeStart = null
                     rangeEnd = null
 
-        return messages
+        return promises
 
     ###*
      * Performs linting at the specified location.
@@ -139,8 +135,8 @@ class AbstractProvider
      * @param {string}     text
      * @param {string}     scopeDescriptor
      *
-     * @return {Object|null} Either an object for linter or null if there is nothing to report. The range and filePath
-     *                       will be automatically set if omitted.
+     * @return {Promise|null} A promise that returns either an object for linter or null if there is nothing to report.
+     *                        Null may also be returned directly as an indicator of nothing to report.
     ###
     performLintingAt: (editor, rangeStart, rangeEnd, text, scopeDescriptor) ->
         throw new Error("This method is abstract and must be implemented!")
