@@ -1,7 +1,6 @@
 {Disposable} = require 'atom'
 
-ClassProvider   = require './ClassProvider'
-MethodProvider   = require './MethodProvider'
+Provider = require './Provider'
 
 module.exports =
     ###*
@@ -30,10 +29,9 @@ module.exports =
     activate: ->
         #@configuration = new AtomConfig(@packageName)
 
-        #@providers.push(new MethodProvider(@configuration))
+        #@providers.push(new Provider(@configuration))
 
-        @providers.push(new ClassProvider())
-        @providers.push(new MethodProvider())
+        @providers.push(new Provider())
 
     ###*
      * Deactivates the package.
