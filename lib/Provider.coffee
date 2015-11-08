@@ -79,9 +79,9 @@ class Provider
             taskOutputPromises = []
 
             for taskName in @tasks
-                taskPromises = []
+                taskOutputPromises.push new Promise (resolve, reject) =>
+                    taskPromises = []
 
-                taskOutputPromise = new Promise (resolve, reject) =>
                     task = Task.once require.resolve(taskName), editor.getText(), =>
                         resolve Promise.all(taskPromises).then (messages) =>
                             messages = messages.filter (value) ->
@@ -137,8 +137,6 @@ class Provider
                             taskPromises.push new Promise (resolve, reject) =>
                                 resolve(linterData)
                     )
-
-                taskOutputPromises.push(taskOutputPromise)
 
             resolveLinting Promise.all(taskOutputPromises).then (messageArrays) =>
                 flattenedMessageArray = []
