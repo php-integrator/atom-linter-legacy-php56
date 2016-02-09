@@ -1,7 +1,3 @@
-{Disposable} = require 'atom'
-
-Provider = require './Provider'
-
 module.exports =
     ###*
      * Configuration settings.
@@ -24,26 +20,45 @@ module.exports =
     providers: []
 
     ###*
+     * List of indie linters.
+    ###
+    indieProviders: []
+
+    ###*
+     * The indexing indie linter.
+    ###
+    indexingIndieLinter: null
+
+    ###*
      * Activates the package.
     ###
     activate: ->
+        {CompositeDisposable} = require 'atom'
+
+        @indieProviders = new CompositeDisposable()
+
         #@configuration = new AtomConfig(@packageName)
 
-        #@providers.push(new Provider(@configuration))
+        Provider = require './Provider'
 
-        @providers.push(new Provider())
+        #@providers.push(new Provider(@configuration))
+        #@providers.push(new Provider())
 
     ###*
      * Deactivates the package.
     ###
     deactivate: ->
         @deactivateProviders()
+        @indieProviders.dispose()
 
     ###*
      * Activates the providers using the specified service.
     ###
     activateProviders: (service) ->
         for provider in @providers
+            provider.activate(service)
+
+        for provider in @indieProviders
             provider.activate(service)
 
     ###*
@@ -55,6 +70,11 @@ module.exports =
 
         @providers = []
 
+        for provider in @indieProviders
+            provider.deactivate()
+
+        @indieProviders = []
+
     ###*
      * Sets the php-integrator service.
      *
@@ -65,7 +85,53 @@ module.exports =
     setService: (service) ->
         @activateProviders(service)
 
+        service.onDidFinishIndexing (response) =>
+            if @indexingIndieLinter
+                @indexingIndieLinter.setMessages([])
+
+        service.onDidFailIndexing (response) =>
+            if @indexingIndieLinter
+                # TODO: Support project indexing errors, response.path = null?
+                # TODO: The retrieved line from the base package is completely wrong.
+
+                try
+                    decodedOutput = JSON.parse(response.error.rawOutput)
+
+                catch error
+                    @indexingIndieLinter.setMessages([{
+                        type     : 'Error'
+                        html     : 'The current file could not be indexed, it might contain syntax or semantic errors!'
+                        filePath : response.path
+                    }])
+
+                    return
+
+                linterMessages = []
+
+                for error in decodedOutput.result.errors
+                    linterMessages.push({
+                        type     : 'Error'
+                        html     : error.message
+                        filePath : error.file
+                        range    : [[error.line, 0], [error.line, 0]]
+                    })
+
+                @indexingIndieLinter.setMessages(linterMessages)
+
+        {Disposable} = require 'atom'
+
         return new Disposable => @deactivateProviders()
+
+    ###*
+     * Sets the linter indie service.
+     *
+     * @param {mixed} service
+     *
+     * @return {Disposable}
+    ###
+    setLinterIndieService: (service) ->
+        @indexingIndieLinter = service.register({name : 'php-integrator-linter'})
+        @indieProviders.add(@indexingIndieLinter)
 
     ###*
      * Retrieves a list of supported autocompletion providers.

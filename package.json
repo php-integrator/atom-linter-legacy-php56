@@ -20,6 +20,11 @@
       "versions": {
         "~0.6.0": "setService"
       }
+    },
+    "linter-indie": {
+      "versions": {
+        "1.0.0": "setLinterIndieService"
+      }
     }
   },
   "dependencies": {
