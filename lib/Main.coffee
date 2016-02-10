@@ -108,11 +108,17 @@ module.exports =
                 linterMessages = []
 
                 for error in decodedOutput.result.errors
+                    startLine = if error.startLine then error.startLine else 1
+                    endLine   = if error.endLine   then error.endLine   else 1
+
+                    startColumn = if error.startColumn then error.startColumn else 1
+                    endColumn =   if error.endColumn   then error.endColumn   else 1
+
                     linterMessages.push({
                         type     : 'Error'
                         html     : error.message
                         filePath : error.file
-                        range    : [[error.startLine - 1, error.startColumn - 1], [error.endLine - 1, error.endColumn - 1]]
+                        range    : [[startLine - 1, startColumn - 1], [endLine - 1, endColumn]]
                     })
 
                 @indexingIndieLinter.setMessages(linterMessages)
