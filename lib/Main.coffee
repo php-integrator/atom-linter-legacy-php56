@@ -92,7 +92,6 @@ module.exports =
         service.onDidFailIndexing (response) =>
             if @indexingIndieLinter
                 # TODO: Support project indexing errors, response.path = null?
-                # TODO: The retrieved line from the base package is completely wrong.
 
                 try
                     decodedOutput = JSON.parse(response.error.rawOutput)
