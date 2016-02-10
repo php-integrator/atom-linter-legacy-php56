@@ -113,7 +113,7 @@ module.exports =
                         type     : 'Error'
                         html     : error.message
                         filePath : error.file
-                        range    : [[error.line, 0], [error.line, 0]]
+                        range    : [[error.startLine - 1, error.startColumn - 1], [error.endLine - 1, error.endColumn - 1]]
                     })
 
                 @indexingIndieLinter.setMessages(linterMessages)
