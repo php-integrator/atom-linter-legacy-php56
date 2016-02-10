@@ -86,46 +86,82 @@ module.exports =
         @activateProviders(service)
 
         service.onDidFinishIndexing (response) =>
-            if @indexingIndieLinter
-                @indexingIndieLinter.setMessages([])
+            # NOTE: A project index always "succeeds" as errors are ignored, but it may return errors anyway.
+            return if not @indexingIndieLinter
+
+            # Remove only messages pertaining to this file or items in this folder.
+            filteredMessages = @indexingIndieLinter.messages.filter (value) =>
+                return not value.filePath.startsWith(response.path)
+
+            linterMessages = @convertIndexingErrorsToLinterMessages(response.output.errors)
+
+            filteredMessages = filteredMessages.concat(linterMessages)
+
+            @indexingIndieLinter.messages = filteredMessages
+            @indexingIndieLinter.setMessages(filteredMessages)
 
         service.onDidFailIndexing (response) =>
-            if @indexingIndieLinter
-                # TODO: Support project indexing errors, response.path = null?
+            return if not @indexingIndieLinter
 
-                try
-                    decodedOutput = JSON.parse(response.error.rawOutput)
+            # Filter out messages pertaining to the current file, but leave others intact.
+            filteredMessages = @indexingIndieLinter.messages.filter (value) =>
+                return not value.filePath.startsWith(response.path)
 
-                catch error
-                    @indexingIndieLinter.setMessages([{
-                        type     : 'Error'
-                        html     : 'The current file could not be indexed, it might contain syntax or semantic errors!'
-                        filePath : response.path
-                    }])
+            invalidOutput = false
 
-                    return
+            try
+                decodedOutput = JSON.parse(response.error.rawOutput)
 
-                linterMessages = []
+            catch error
+                invalidOutput = true
 
-                for error in decodedOutput.result.errors
-                    startLine = if error.startLine then error.startLine else 1
-                    endLine   = if error.endLine   then error.endLine   else 1
+            if not invalidOutput
+                linterMessagesForFile = @convertIndexingErrorsToLinterMessages(decodedOutput.result.errors)
 
-                    startColumn = if error.startColumn then error.startColumn else 1
-                    endColumn =   if error.endColumn   then error.endColumn   else 1
+                filteredMessages = filteredMessages.concat(linterMessagesForFile)
 
-                    linterMessages.push({
-                        type     : 'Error'
-                        html     : error.message
-                        filePath : error.file
-                        range    : [[startLine - 1, startColumn - 1], [endLine - 1, endColumn]]
-                    })
+            else
+                @filteredMessages.push({
+                    type     : 'Error'
+                    html     : 'Indexing failed and an invalid response was returned, something might be wrong with your setup!'
+                    filePath : response.path
+                    range    : [[0, 0], [0, 0]]
+                })
 
-                @indexingIndieLinter.setMessages(linterMessages)
+            @indexingIndieLinter.messages = filteredMessages
+            @indexingIndieLinter.setMessages(filteredMessages)
 
         {Disposable} = require 'atom'
 
         return new Disposable => @deactivateProviders()
+
+    ###*
+     * Handles indexing errors by passing them to the indie linter.
+     *
+     * @param {array} errors
+     *
+     * @return {array}
+    ###
+    convertIndexingErrorsToLinterMessages: (errors) ->
+        # TODO: Support project indexing errors, response.path = null?
+
+        linterMessages = []
+
+        for error in errors
+            startLine = if error.startLine then error.startLine else 1
+            endLine   = if error.endLine   then error.endLine   else 1
+
+            startColumn = if error.startColumn then error.startColumn else 1
+            endColumn =   if error.endColumn   then error.endColumn   else 1
+
+            linterMessages.push({
+                type     : 'Error'
+                html     : error.message
+                filePath : error.file
+                range    : [[startLine - 1, startColumn - 1], [endLine - 1, endColumn]]
+            })
+
+        return linterMessages
 
     ###*
      * Sets the linter indie service.
@@ -135,7 +171,9 @@ module.exports =
      * @return {Disposable}
     ###
     setLinterIndieService: (service) ->
-        @indexingIndieLinter = service.register({name : 'php-integrator-linter'})
+        @indexingIndieLinter = service.register({name : 'php-integrator-linter', scope: 'project', grammarScopes: ['source.php']})
+        @indexingIndieLinter.messages = []
+
         @indieProviders.add(@indexingIndieLinter)
 
     ###*
