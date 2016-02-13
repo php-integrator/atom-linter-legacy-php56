@@ -1,4 +1,8 @@
-# php-integrator-autocomplete-plus
+# php-integrator-linter
+<p align="right">
+:coffee:
+<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YKTNLZCRHMRTJ">Send me some coffee beans</a>
+</p>
 
 This package provides linting for your PHP source code using [PHP Integrator](https://github.com/Gert-dev/php-integrator-base) as well as [linter](https://github.com/atom-community/linter).
 
