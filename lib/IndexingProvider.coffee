@@ -17,9 +17,20 @@ class IndexingProvider
     indieLinter: null
 
     ###*
+     * Timeout handle used to invoke the processing of the queue.
+    ###
+    queueProcessingTimeout: null
+
+    ###*
+     * A list of responses that have been queued for processing.
+    ###
+    responseQueue: null
+
+    ###*
      * Constructor.
     ###
     constructor: () ->
+        @responseQueue = []
 
     ###*
      * Initializes this provider.
@@ -77,46 +88,101 @@ class IndexingProvider
     attachListeners: (service) ->
         service.onDidFinishIndexing (response) =>
             # NOTE: A project index always "succeeds" as errors are ignored, but it may return errors anyway.
-            return if not @indieLinter
+            @responseQueue.push({
+                method   : 'onDidFinishIndexing'
+                response : response
+            })
 
-            # Remove only messages pertaining to this file or items in this folder.
-            filteredMessages = @indieLinter.messages.filter (value) =>
-                return not value.filePath.startsWith(response.path)
-
-            linterMessages = @convertIndexingErrorsToLinterMessages(response.output.errors)
-
-            filteredMessages = filteredMessages.concat(linterMessages)
-
-            @indieLinter.messages = filteredMessages
-            @indieLinter.setMessages(filteredMessages)
+            @scheduleQueueProcessing()
 
         service.onDidFailIndexing (response) =>
-            return if not @indieLinter
+            @responseQueue.push({
+                method   : 'onDidFailIndexing'
+                response : response
+            })
 
-            # Filter out messages pertaining to the current file, but leave others intact.
-            filteredMessages = @indieLinter.messages.filter (value) =>
-                return not value.filePath.startsWith(response.path)
+            @scheduleQueueProcessing()
 
-            invalidOutput = false
+    ###*
+     * Schedules processing of the queue to happen after a specific delay.
+     *
+     * @param {number} delay
+    ###
+    scheduleQueueProcessing: (delay = 25) ->
+        if not @queueProcessingTimeout
+            @queueProcessingTimeout = setTimeout ( =>
+                @processQueueItems()
+                @queueProcessingTimeout = null
+            ), delay
 
-            try
-                decodedOutput = JSON.parse(response.error.rawOutput)
+    ###*
+     * Processes all items currently in the queue.
+    ###
+    processQueueItems: () ->
+        while @responseQueue.length > 0
+            item = @responseQueue.pop()
 
-            catch error
-                invalidOutput = true
+            @processQueueItem(item)
 
-            if not invalidOutput
-                linterMessagesForFile = @convertIndexingErrorsToLinterMessages(decodedOutput.result.errors)
+    ###*
+     * Processes the specified queue item.
+     *
+     * @param {mixed} service
+    ###
+    processQueueItem: (item) ->
+        @[item.method](item.response)
 
-                filteredMessages = filteredMessages.concat(linterMessagesForFile)
+    ###*
+     * Handles indexing finishing (successfully).
+     *
+     * @param {Object} response
+    ###
+    onDidFinishIndexing: (response) ->
+        return if not @indieLinter
 
-            else
-                @filteredMessages.push({
-                    type     : 'Error'
-                    html     : 'Indexing failed and an invalid response was returned, something might be wrong with your setup!'
-                    filePath : response.path
-                    range    : [[0, 0], [0, 0]]
-                })
+        # Remove only messages pertaining to this file or items in this folder.
+        filteredMessages = @indieLinter.messages.filter (value) =>
+            return not value.filePath.startsWith(response.path)
 
-            @indieLinter.messages = filteredMessages
-            @indieLinter.setMessages(filteredMessages)
+        linterMessages = @convertIndexingErrorsToLinterMessages(response.output.errors)
+
+        filteredMessages = filteredMessages.concat(linterMessages)
+
+        @indieLinter.messages = filteredMessages
+        @indieLinter.setMessages(filteredMessages)
+
+    ###*
+     * Handles indexing failing.
+     *
+     * @param {Object} response
+    ###
+    onDidFailIndexing: (response) ->
+        return if not @indieLinter
+
+        # Filter out messages pertaining to the current file, but leave others intact.
+        filteredMessages = @indieLinter.messages.filter (value) =>
+            return not value.filePath.startsWith(response.path)
+
+        invalidOutput = false
+
+        try
+            decodedOutput = JSON.parse(response.error.rawOutput)
+
+        catch error
+            invalidOutput = true
+
+        if not invalidOutput
+            linterMessagesForFile = @convertIndexingErrorsToLinterMessages(decodedOutput.result.errors)
+
+            filteredMessages = filteredMessages.concat(linterMessagesForFile)
+
+        else
+            @filteredMessages.push({
+                type     : 'Error'
+                html     : 'Indexing failed and an invalid response was returned, something might be wrong with your setup!'
+                filePath : response.path
+                range    : [[0, 0], [0, 0]]
+            })
+
+        @indieLinter.messages = filteredMessages
+        @indieLinter.setMessages(filteredMessages)
