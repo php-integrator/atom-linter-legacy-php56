@@ -1,5 +1,3 @@
-{TextEditor, Task} = require 'atom'
-
 module.exports =
 
 ##*
