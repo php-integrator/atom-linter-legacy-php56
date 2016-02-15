@@ -161,6 +161,9 @@ class IndexingProvider
         filteredMessages = @indieLinter.messages.filter (value) =>
             return not value.filePath.startsWith(response.path)
 
+        if not filteredMessages?
+            filteredMessages = []
+
         invalidOutput = false
 
         try
@@ -175,7 +178,7 @@ class IndexingProvider
             filteredMessages = filteredMessages.concat(linterMessagesForFile)
 
         else
-            @filteredMessages.push({
+            filteredMessages.push({
                 type     : 'Error'
                 html     : 'Indexing failed and an invalid response was returned, something might be wrong with your setup!'
                 filePath : response.path
