@@ -15,6 +15,11 @@ class IndexingProvider
     indieLinter: null
 
     ###*
+     * A list of messages that are relevant and currently set in the indie linter.
+    ###
+    messages: null
+
+    ###*
      * Timeout handle used to invoke the processing of the queue.
     ###
     queueProcessingTimeout: null
@@ -28,6 +33,7 @@ class IndexingProvider
      * Constructor.
     ###
     constructor: () ->
+        @messages = []
         @responseQueue = []
 
     ###*
@@ -49,8 +55,7 @@ class IndexingProvider
      * @param {mixed} indieLinter
     ###
     setIndieLinter: (@indieLinter) ->
-        if @indieLinter
-            @indieLinter.messages = []
+        @messages = []
 
     ###*
      * Handles indexing errors by passing them to the indie linter.
@@ -139,14 +144,14 @@ class IndexingProvider
         return if not @indieLinter
 
         # Remove only messages pertaining to this file or items in this folder.
-        filteredMessages = @indieLinter.messages.filter (value) =>
+        filteredMessages = @messages.filter (value) =>
             return not value.filePath.startsWith(response.path)
 
         linterMessages = @convertIndexingErrorsToLinterMessages(response.output.errors)
 
         filteredMessages = filteredMessages.concat(linterMessages)
 
-        @indieLinter.messages = filteredMessages
+        @messages = filteredMessages
         @indieLinter.setMessages(filteredMessages)
 
     ###*
@@ -158,7 +163,7 @@ class IndexingProvider
         return if not @indieLinter
 
         # Filter out messages pertaining to the current file, but leave others intact.
-        filteredMessages = @indieLinter.messages.filter (value) =>
+        filteredMessages = @messages.filter (value) =>
             return not value.filePath.startsWith(response.path)
 
         if not filteredMessages?
@@ -185,5 +190,5 @@ class IndexingProvider
                 range    : [[0, 0], [0, 0]]
             })
 
-        @indieLinter.messages = filteredMessages
+        @messages = filteredMessages
         @indieLinter.setMessages(filteredMessages)
