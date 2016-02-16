@@ -133,12 +133,17 @@ class IndexingProvider
      * @param {mixed} service
     ###
     processQueueItem: (item) ->
-        @[item.method](item.response)
+        newMessages = @[item.method](item.response)
+
+        @messages = newMessages
+        @indieLinter.setMessages(newMessages)
 
     ###*
      * Handles indexing finishing (successfully).
      *
      * @param {Object} response
+     *
+     * @return {array}
     ###
     onDidFinishIndexing: (response) ->
         return if not @indieLinter
@@ -147,17 +152,19 @@ class IndexingProvider
         filteredMessages = @messages.filter (value) =>
             return not value.filePath.startsWith(response.path)
 
+        if not filteredMessages?
+            filteredMessages = []
+
         linterMessages = @convertIndexingErrorsToLinterMessages(response.output.errors)
 
-        filteredMessages = filteredMessages.concat(linterMessages)
-
-        @messages = filteredMessages
-        @indieLinter.setMessages(filteredMessages)
+        return filteredMessages.concat(linterMessages)
 
     ###*
      * Handles indexing failing.
      *
      * @param {Object} response
+     *
+     * @return {array}
     ###
     onDidFailIndexing: (response) ->
         return if not @indieLinter
@@ -190,5 +197,4 @@ class IndexingProvider
                 range    : [[0, 0], [0, 0]]
             })
 
-        @messages = filteredMessages
-        @indieLinter.setMessages(filteredMessages)
+        return filteredMessages
