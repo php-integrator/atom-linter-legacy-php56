@@ -74,10 +74,6 @@ class IndexingProvider
             startColumn = if error.startColumn then error.startColumn else 1
             endColumn =   if error.endColumn   then error.endColumn   else 1
 
-            # TODO: Remove me, this is for testing.
-            if error.message.length > 4096
-                throw new Error('Way too long error found, first part: ' + error.message.substr(0, 4096))
-
             linterMessages.push({
                 type     : 'Error'
                 html     : error.message
@@ -138,6 +134,12 @@ class IndexingProvider
     ###
     processQueueItem: (item) ->
         newMessages = @[item.method](item.response)
+
+        # TODO: Remove me, this is for testing.
+        test = JSON.stringify(newMessages)
+
+        if test.length > 4096
+            throw new Error('Way too long error found, first part: ' + test.substr(0, 4096))
 
         @messages = newMessages
         @indieLinter.setMessages(newMessages)
