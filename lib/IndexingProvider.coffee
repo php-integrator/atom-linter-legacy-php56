@@ -135,11 +135,12 @@ class IndexingProvider
     processQueueItem: (item) ->
         newMessages = @[item.method](item.response)
 
-        # TODO: Remove me, this is for testing.
-        test = JSON.stringify(newMessages)
-
-        if test.length > 4096
-            throw new Error('Way too long error found, first part: ' + test.substr(0, 4096))
+        # *Apparently*, the linter package runs a "JSON.stringify" on each message and then sets it as the key of the
+        # *same* message object. As objects are by reference and we're maintaining old messages with our internal
+        # bookkeeping, the linter keeps re-stringifying the same object containing the previously stringified data,
+        # making each message larger and larger, until it finally runs out of memory.
+        for message in newMessages
+            delete message.key
 
         @messages = newMessages
         @indieLinter.setMessages(newMessages)
