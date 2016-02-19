@@ -1,7 +1,7 @@
 {
   "name": "php-integrator-linter",
   "main": "./lib/Main",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Lints your PHP source code to indicate various problems such as missing methods.",
   "repository": "https://github.com/Gert-dev/php-integrator-linter.git",
   "license": "GPL-3.0",
@@ -28,7 +28,7 @@
     }
   },
   "dependencies": {
-      "jquery": "~2.1.4"
+    "jquery": "~2.1.4"
   },
   "keywords": [
     "php",
