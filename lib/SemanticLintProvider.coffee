@@ -55,7 +55,7 @@ class IndexingProvider
 
                     messages.push({
                         type     : 'Error'
-                        html     : '<strong>' + unknownClass.name + '</strong> was not found!'
+                        html     : '<strong>' + unknownClass.name + '</strong> was not found.'
                         range    : [startPoint, endPoint]
                         filePath : editor.getPath()
                     })
