@@ -30,16 +30,24 @@ module.exports =
     indexingProvider: null
 
     ###*
+     * The semantic lint provider.
+    ###
+    semanticLintProvider: null
+
+    ###*
      * Activates the package.
     ###
     activate: ->
         #@configuration = new AtomConfig(@packageName)
 
-        IndexingProvider = require './IndexingProvider'
+        IndexingProvider     = require './IndexingProvider'
+        SemanticLintProvider = require './SemanticLintProvider'
 
         @indexingProvider = new IndexingProvider()
+        @semanticLintProvider = new SemanticLintProvider()
 
         @indieProviders.push(@indexingProvider)
+        @indieProviders.push(@semanticLintProvider)
 
     ###*
      * Deactivates the package.
@@ -93,13 +101,16 @@ module.exports =
      * @return {Disposable}
     ###
     setLinterIndieService: (service) ->
-        indieLinter = null
+        indexingIndieLinter = null
+        semanticIndieLinter = null
 
         if service
-            indieLinter = service.register({name : 'php-integrator-linter', scope: 'project', grammarScopes: ['source.php']})
+            indexingIndieLinter = service.register({name : 'php-integrator-linter', scope: 'project', grammarScopes: ['source.php']})
+            semanticIndieLinter = service.register({name : 'php-integrator-linter', scope: 'file',    grammarScopes: ['source.php']})
 
-        @indexingProvider.setIndieLinter(indieLinter)
-        
+        @indexingProvider.setIndieLinter(indexingIndieLinter)
+        @semanticLintProvider.setIndieLinter(semanticIndieLinter)
+
     ###*
      * Retrieves a list of supported autocompletion providers.
      *

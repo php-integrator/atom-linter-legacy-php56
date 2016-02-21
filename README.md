@@ -11,6 +11,8 @@ This package provides linting for your PHP source code using [PHP Integrator](ht
 This package is not meant to be a replacement for existing PHP linters, but more as a complementary package that will indicate additional issues that the existing linters can't detect.
 
 What is included?
+  * Shows warnings about unused use statements.
+  * Shows erroneous class names that can't be resolved.
   * Shows errors returned by the base service's indexing process.
 
 ![GPLv3 Logo](http://gplv3.fsf.org/gplv3-127x51.png)
