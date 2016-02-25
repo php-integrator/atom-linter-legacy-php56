@@ -135,6 +135,9 @@ class IndexingProvider
     processQueueItem: (item) ->
         newMessages = @[item.method](item.response)
 
+        if !newMessages
+            return
+
         # *Apparently*, the linter package runs a "JSON.stringify" on each message and then sets it as the key of the
         # *same* message object. As objects are by reference and we're maintaining old messages with our internal
         # bookkeeping, the linter keeps re-stringifying the same object containing the previously stringified data,
