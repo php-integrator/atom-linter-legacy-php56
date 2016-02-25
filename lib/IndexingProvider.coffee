@@ -153,7 +153,7 @@ class IndexingProvider
      * @return {array}
     ###
     onDidFinishIndexing: (response) ->
-        return if not @indieLinter
+        return [] if not @indieLinter
 
         # Remove only messages pertaining to this file or items in this folder.
         filteredMessages = @messages.filter (value) =>
@@ -174,7 +174,7 @@ class IndexingProvider
      * @return {array}
     ###
     onDidFailIndexing: (response) ->
-        return if not @indieLinter
+        return [] if not @indieLinter
 
         # Filter out messages pertaining to the current file, but leave others intact.
         filteredMessages = @messages.filter (value) =>
