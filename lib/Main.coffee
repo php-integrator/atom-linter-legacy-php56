@@ -7,7 +7,7 @@ module.exports =
     ###*
      * The name of the package.
     ###
-    #packageName: 'php-integrator-linter'
+    packageName: 'php-integrator-linter'
 
     ###*
      * The configuration object.
@@ -105,8 +105,8 @@ module.exports =
         semanticIndieLinter = null
 
         if service
-            indexingIndieLinter = service.register({name : 'php-integrator-linter', scope: 'project', grammarScopes: ['source.php']})
-            semanticIndieLinter = service.register({name : 'php-integrator-linter', scope: 'file',    grammarScopes: ['source.php']})
+            indexingIndieLinter = service.register({name : @packageName, scope: 'project', grammarScopes: ['source.php']})
+            semanticIndieLinter = service.register({name : @packageName, scope: 'file',    grammarScopes: ['source.php']})
 
         @indexingProvider.setIndieLinter(indexingIndieLinter)
         @semanticLintProvider.setIndieLinter(semanticIndieLinter)
