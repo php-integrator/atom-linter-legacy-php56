@@ -159,9 +159,6 @@ class IndexingProvider
         filteredMessages = @messages.filter (value) =>
             return not value.filePath.startsWith(response.path)
 
-        if not filteredMessages?
-            filteredMessages = []
-
         linterMessages = @convertIndexingErrorsToLinterMessages(response.output.errors)
 
         return filteredMessages.concat(linterMessages)
@@ -179,9 +176,6 @@ class IndexingProvider
         # Filter out messages pertaining to the current file, but leave others intact.
         filteredMessages = @messages.filter (value) =>
             return not value.filePath.startsWith(response.path)
-
-        if not filteredMessages?
-            filteredMessages = []
 
         invalidOutput = false
 
