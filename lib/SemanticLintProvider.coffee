@@ -74,7 +74,7 @@ class IndexingProvider
                 @indieLinter.setMessages(messages)
 
             failureHandler = (response) =>
-                @indieLinter.setMessages(messages)
+                @indieLinter.setMessages([])
 
             return @service.semanticLint(editor.getPath(), editor.getBuffer().getText(), true).then(successHandler, failureHandler)
 
