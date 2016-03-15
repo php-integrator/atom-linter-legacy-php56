@@ -143,7 +143,9 @@ class IndexingProvider
             delete message.key
 
         @messages = newMessages
-        @indieLinter.setMessages(newMessages)
+
+        if @indieLinter
+            @indieLinter.setMessages(newMessages)
 
     ###*
      * Handles indexing finishing (successfully).

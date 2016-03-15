@@ -71,10 +71,12 @@ class IndexingProvider
                         filePath : editor.getPath()
                     })
 
-                @indieLinter.setMessages(messages)
+                if @indieLinter
+                    @indieLinter.setMessages(messages)
 
             failureHandler = (response) =>
-                @indieLinter.setMessages([])
+                if @indieLinter
+                    @indieLinter.setMessages([])
 
             return @service.semanticLint(editor.getPath(), editor.getBuffer().getText(), true).then(successHandler, failureHandler)
 
