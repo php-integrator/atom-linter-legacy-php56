@@ -1,5 +1,5 @@
 ## 0.2.2 (base 0.8.0)
-# Update to use the most recent version of the base service.
+* Update to use the most recent version of the base service.
 
 ## 0.2.1
 * Catch errors when no linter is set.
