@@ -93,7 +93,7 @@ class IndexingProvider
                             editor,
                             item,
                             'Warning',
-                            'The docblock for <strong>' + item.name + '</strong> is missing.'
+                            'Documentation for <strong>' + item.name + '</strong> is missing.'
                         )
 
                     for item in response.warnings.docblockIssues.parameterMissing
