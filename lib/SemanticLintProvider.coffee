@@ -133,7 +133,7 @@ class IndexingProvider
                 noUnusedUseStatements : not @config.get('showUnusedUseStatements')
             }
 
-            return @service.semanticLint(editor.getPath(), editor.getBuffer().getText(), options, true).then(successHandler, failureHandler)
+            return @service.semanticLint(editor.getPath(), editor.getBuffer().getText(), options).then(successHandler, failureHandler)
 
         #service.onDidFailIndexing (response) =>
         #    return
