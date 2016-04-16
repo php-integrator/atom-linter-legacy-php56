@@ -101,7 +101,7 @@ class IndexingProvider
                             editor,
                             item,
                             'Warning',
-                            'The docblock for <strong>' + item.name + '</strong> is missing a @param tag for ' + item.parameter + '.'
+                            'The docblock for <strong>' + item.name + '</strong> is missing a @param tag for <strong>' + item.parameter + '</strong>.'
                         )
 
                     for item in response.warnings.docblockIssues.parameterTypeMismatch
@@ -109,7 +109,7 @@ class IndexingProvider
                             editor,
                             item,
                             'Warning',
-                            'The docblock for <strong>' + item.name + '</strong> has an incorrect @param type for ' + item.parameter + '.'
+                            'The docblock for <strong>' + item.name + '</strong> has an incorrect @param type for <strong>' + item.parameter + '</strong>.'
                         )
 
                     for item in response.warnings.docblockIssues.superfluousParameter
@@ -117,7 +117,7 @@ class IndexingProvider
                             editor,
                             item,
                             'Warning',
-                            'The docblock for <strong>' + item.name + '</strong> contains superfluous @param tags for: ' + item.parameters.join(', ')
+                            'The docblock for <strong>' + item.name + '</strong> contains superfluous @param tags for: <strong>' + item.parameters.join(', ') + '</strong>.'
                         )
 
                 if @indieLinter
