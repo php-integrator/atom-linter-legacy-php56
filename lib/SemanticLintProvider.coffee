@@ -67,7 +67,7 @@ class IndexingProvider
                             editor,
                             item,
                             'Error',
-                            '<strong>' + item.name + '</strong> was not found.'
+                            "<strong>#{item.name}</strong> was not found."
                         )
 
                 if response.warnings.unusedUseStatements?
@@ -76,7 +76,7 @@ class IndexingProvider
                             editor,
                             item,
                             'Warning',
-                            '<strong>' + item.name + '</strong> is not used anywhere.'
+                            "<strong>#{item.name}</strong> is not used anywhere."
                         )
 
                 if response.warnings.docblockIssues?
@@ -85,7 +85,7 @@ class IndexingProvider
                             editor,
                             item,
                             'Warning',
-                            'The docblock for <strong>' + item.name + '</strong> is missing a @var tag.'
+                            "The docblock for <strong>#{item.name}</strong> is missing a @var tag."
                         )
 
                     for item in response.warnings.docblockIssues.missingDocumentation
@@ -93,7 +93,7 @@ class IndexingProvider
                             editor,
                             item,
                             'Warning',
-                            'Documentation for <strong>' + item.name + '</strong> is missing.'
+                            "Documentation for <strong>#{item.name}</strong> is missing."
                         )
 
                     for item in response.warnings.docblockIssues.parameterMissing
@@ -101,7 +101,7 @@ class IndexingProvider
                             editor,
                             item,
                             'Warning',
-                            'The docblock for <strong>' + item.name + '</strong> is missing a @param tag for <strong>' + item.parameter + '</strong>.'
+                            "The docblock for <strong>#{item.name}</strong> is missing a @param tag for <strong>#{item.parameter}</strong>."
                         )
 
                     for item in response.warnings.docblockIssues.parameterTypeMismatch
@@ -109,15 +109,17 @@ class IndexingProvider
                             editor,
                             item,
                             'Warning',
-                            'The docblock for <strong>' + item.name + '</strong> has an incorrect @param type for <strong>' + item.parameter + '</strong>.'
+                            "The docblock for <strong>#{item.name}</strong> has an incorrect @param type for <strong>#{item.parameter}</strong>."
                         )
 
                     for item in response.warnings.docblockIssues.superfluousParameter
+                        parameters = item.parameters.join(', ')
+
                         messages.push @createLinterMessageForOutputItem(
                             editor,
                             item,
                             'Warning',
-                            'The docblock for <strong>' + item.name + '</strong> contains superfluous @param tags for: <strong>' + item.parameters.join(', ') + '</strong>.'
+                            "The docblock for <strong>#{item.name}</strong> contains superfluous @param tags for: <strong>#{parameters}</strong>."
                         )
 
                     for item in response.warnings.docblockIssues.deprecatedCategoryTag
@@ -125,7 +127,7 @@ class IndexingProvider
                             editor,
                             item,
                             'Warning',
-                            'The docblock for <strong>' + item.name + '</strong> contains a deprecated @category tag.'
+                            "The docblock for <strong>#{item.name}</strong> contains a deprecated @category tag."
                         )
 
                     for item in response.warnings.docblockIssues.deprecatedSubpackageTag
@@ -133,7 +135,7 @@ class IndexingProvider
                             editor,
                             item,
                             'Warning',
-                            'The docblock for <strong>' + item.name + '</strong> contains a deprecated @subpackage tag.'
+                            "The docblock for <strong>#{item.name}</strong> contains a deprecated @subpackage tag."
                         )
 
                     link = 'https://github.com/phpDocumentor/fig-standards/blob/master/proposed/phpdoc.md#710-link-deprecated'
