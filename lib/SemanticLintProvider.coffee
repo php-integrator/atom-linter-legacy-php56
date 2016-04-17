@@ -120,6 +120,32 @@ class IndexingProvider
                             'The docblock for <strong>' + item.name + '</strong> contains superfluous @param tags for: <strong>' + item.parameters.join(', ') + '</strong>.'
                         )
 
+                    for item in response.warnings.docblockIssues.deprecatedCategoryTag
+                        messages.push @createLinterMessageForOutputItem(
+                            editor,
+                            item,
+                            'Warning',
+                            'The docblock for <strong>' + item.name + '</strong> contains a deprecated @category tag.'
+                        )
+
+                    for item in response.warnings.docblockIssues.deprecatedSubpackageTag
+                        messages.push @createLinterMessageForOutputItem(
+                            editor,
+                            item,
+                            'Warning',
+                            'The docblock for <strong>' + item.name + '</strong> contains a deprecated @subpackage tag.'
+                        )
+
+                    link = 'https://github.com/phpDocumentor/fig-standards/blob/master/proposed/phpdoc.md#710-link-deprecated'
+
+                    for item in response.warnings.docblockIssues.deprecatedLinkTag
+                        messages.push @createLinterMessageForOutputItem(
+                            editor,
+                            item,
+                            'Warning',
+                            "The docblock for <strong>#{item.name}</strong> contains a deprecated @link tag. See also <a href=\"#{link}\">#{link}</a>"
+                        )
+
                 if @indieLinter
                     @indieLinter.setMessages(messages)
 
