@@ -1,6 +1,7 @@
 ## 0.3.0 (base 0.9.0)
 * There is now a settings screen to disable certain aspects of the linting process.
 * The linter can now utilize the new functionality of the base service to lint docblock correctness (enabled by default).
+* Due to changes in the base service, multiple syntax errors can now be shown at the same time in some cases (instead of the next popping up after correcing the first).
 
 ## 0.2.2 (base 0.8.0)
 * Update to use the most recent version of the base service.
