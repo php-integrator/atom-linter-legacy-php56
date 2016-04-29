@@ -58,11 +58,6 @@ module.exports =
     indieProviders: []
 
     ###*
-     * The indexing provider.
-    ###
-    indexingProvider: null
-
-    ###*
      * The semantic lint provider.
     ###
     semanticLintProvider: null
@@ -72,15 +67,12 @@ module.exports =
     ###
     activate: ->
         AtomConfig           = require './AtomConfig'
-        IndexingProvider     = require './IndexingProvider'
         SemanticLintProvider = require './SemanticLintProvider'
 
         @configuration = new AtomConfig(@packageName)
 
-        @indexingProvider = new IndexingProvider()
         @semanticLintProvider = new SemanticLintProvider(@configuration)
 
-        @indieProviders.push(@indexingProvider)
         @indieProviders.push(@semanticLintProvider)
 
     ###*
@@ -135,14 +127,12 @@ module.exports =
      * @return {Disposable}
     ###
     setLinterIndieService: (service) ->
-        indexingIndieLinter = null
+        #indexingIndieLinter = null
         semanticIndieLinter = null
 
         if service
-            indexingIndieLinter = service.register({name : @packageName, scope: 'project', grammarScopes: ['source.php']})
             semanticIndieLinter = service.register({name : @packageName, scope: 'file',    grammarScopes: ['source.php']})
 
-        @indexingProvider.setIndieLinter(indexingIndieLinter)
         @semanticLintProvider.setIndieLinter(semanticIndieLinter)
 
     ###*

@@ -58,113 +58,147 @@ class IndexingProvider
 
             return if not editor?
 
-            successHandler = (response) =>
-                messages = []
+            @semanticLint(editor)
 
-                if response.errors.unknownClasses?
-                    for item in response.errors.unknownClasses
-                        messages.push @createLinterMessageForOutputItem(
-                            editor,
-                            item,
-                            'Error',
-                            "<strong>#{item.name}</strong> was not found."
-                        )
+        service.onDidFailIndexing (response) =>
+            editor = @findTextEditorByPath(response.path)
 
-                if response.warnings.unusedUseStatements?
-                    for item in response.warnings.unusedUseStatements
-                        messages.push @createLinterMessageForOutputItem(
-                            editor,
-                            item,
-                            'Warning',
-                            "<strong>#{item.name}</strong> is not used anywhere."
-                        )
+            return if not editor?
 
-                if response.warnings.docblockIssues?
-                    for item in response.warnings.docblockIssues.varTagMissing
-                        messages.push @createLinterMessageForOutputItem(
-                            editor,
-                            item,
-                            'Warning',
-                            "The docblock for <strong>#{item.name}</strong> is missing a @var tag."
-                        )
+            @semanticLint(editor)
 
-                    for item in response.warnings.docblockIssues.missingDocumentation
-                        messages.push @createLinterMessageForOutputItem(
-                            editor,
-                            item,
-                            'Warning',
-                            "Documentation for <strong>#{item.name}</strong> is missing."
-                        )
+    ###*
+     * @param {TextEditor} editor
+    ###
+    semanticLint: (editor) ->
+        successHandler = (response) =>
+            messages = []
 
-                    for item in response.warnings.docblockIssues.parameterMissing
-                        messages.push @createLinterMessageForOutputItem(
-                            editor,
-                            item,
-                            'Warning',
-                            "The docblock for <strong>#{item.name}</strong> is missing a @param tag for <strong>#{item.parameter}</strong>."
-                        )
+            if response.errors.syntaxErrors?
+                for item in response.errors.syntaxErrors
+                    messages.push @createLinterMessageForSyntaxErrorOutputItem(editor, item)
 
-                    for item in response.warnings.docblockIssues.parameterTypeMismatch
-                        messages.push @createLinterMessageForOutputItem(
-                            editor,
-                            item,
-                            'Warning',
-                            "The docblock for <strong>#{item.name}</strong> has an incorrect @param type for <strong>#{item.parameter}</strong>."
-                        )
+            if response.errors.unknownClasses?
+                for item in response.errors.unknownClasses
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Error',
+                        "<strong>#{item.name}</strong> was not found."
+                    )
 
-                    for item in response.warnings.docblockIssues.superfluousParameter
-                        parameters = item.parameters.join(', ')
+            if response.warnings.unusedUseStatements?
+                for item in response.warnings.unusedUseStatements
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Warning',
+                        "<strong>#{item.name}</strong> is not used anywhere."
+                    )
 
-                        messages.push @createLinterMessageForOutputItem(
-                            editor,
-                            item,
-                            'Warning',
-                            "The docblock for <strong>#{item.name}</strong> contains superfluous @param tags for: <strong>#{parameters}</strong>."
-                        )
+            if response.warnings.docblockIssues?
+                for item in response.warnings.docblockIssues.varTagMissing
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Warning',
+                        "The docblock for <strong>#{item.name}</strong> is missing a @var tag."
+                    )
 
-                    for item in response.warnings.docblockIssues.deprecatedCategoryTag
-                        messages.push @createLinterMessageForOutputItem(
-                            editor,
-                            item,
-                            'Warning',
-                            "The docblock for <strong>#{item.name}</strong> contains a deprecated @category tag."
-                        )
+                for item in response.warnings.docblockIssues.missingDocumentation
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Warning',
+                        "Documentation for <strong>#{item.name}</strong> is missing."
+                    )
 
-                    for item in response.warnings.docblockIssues.deprecatedSubpackageTag
-                        messages.push @createLinterMessageForOutputItem(
-                            editor,
-                            item,
-                            'Warning',
-                            "The docblock for <strong>#{item.name}</strong> contains a deprecated @subpackage tag."
-                        )
+                for item in response.warnings.docblockIssues.parameterMissing
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Warning',
+                        "The docblock for <strong>#{item.name}</strong> is missing a @param tag for <strong>#{item.parameter}</strong>."
+                    )
 
-                    link = 'https://github.com/phpDocumentor/fig-standards/blob/master/proposed/phpdoc.md#710-link-deprecated'
+                for item in response.warnings.docblockIssues.parameterTypeMismatch
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Warning',
+                        "The docblock for <strong>#{item.name}</strong> has an incorrect @param type for <strong>#{item.parameter}</strong>."
+                    )
 
-                    for item in response.warnings.docblockIssues.deprecatedLinkTag
-                        messages.push @createLinterMessageForOutputItem(
-                            editor,
-                            item,
-                            'Warning',
-                            "The docblock for <strong>#{item.name}</strong> contains a deprecated @link tag. See also <a href=\"#{link}\">#{link}</a>"
-                        )
+                for item in response.warnings.docblockIssues.superfluousParameter
+                    parameters = item.parameters.join(', ')
 
-                if @indieLinter
-                    @indieLinter.setMessages(messages)
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Warning',
+                        "The docblock for <strong>#{item.name}</strong> contains superfluous @param tags for: <strong>#{parameters}</strong>."
+                    )
 
-            failureHandler = (response) =>
-                if @indieLinter
-                    @indieLinter.setMessages([])
+                for item in response.warnings.docblockIssues.deprecatedCategoryTag
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Warning',
+                        "The docblock for <strong>#{item.name}</strong> contains a deprecated @category tag."
+                    )
 
-            options = {
-                noUnknownClasses      : not @config.get('showUnknownClasses')
-                noDocblockCorrectness : not @config.get('validateDocblockCorrectness')
-                noUnusedUseStatements : not @config.get('showUnusedUseStatements')
-            }
+                for item in response.warnings.docblockIssues.deprecatedSubpackageTag
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Warning',
+                        "The docblock for <strong>#{item.name}</strong> contains a deprecated @subpackage tag."
+                    )
 
-            return @service.semanticLint(editor.getPath(), editor.getBuffer().getText(), options).then(successHandler, failureHandler)
+                link = 'https://github.com/phpDocumentor/fig-standards/blob/master/proposed/phpdoc.md#710-link-deprecated'
 
-        #service.onDidFailIndexing (response) =>
-        #    return
+                for item in response.warnings.docblockIssues.deprecatedLinkTag
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Warning',
+                        "The docblock for <strong>#{item.name}</strong> contains a deprecated @link tag. See also <a href=\"#{link}\">#{link}</a>"
+                    )
+
+            if @indieLinter
+                @indieLinter.setMessages(messages)
+
+        failureHandler = (response) =>
+            if @indieLinter
+                @indieLinter.setMessages([])
+
+        options = {
+            noUnknownClasses      : not @config.get('showUnknownClasses')
+            noDocblockCorrectness : not @config.get('validateDocblockCorrectness')
+            noUnusedUseStatements : not @config.get('showUnusedUseStatements')
+        }
+
+        @service.semanticLint(editor.getPath(), editor.getBuffer().getText(), options).then(successHandler, failureHandler)
+
+    ###*
+     * @param {TextEditor} editor
+     * @param {Object}     item
+     *
+     * @return {Object}
+    ###
+    createLinterMessageForSyntaxErrorOutputItem: (editor, item) ->
+        startLine = if item.startLine then item.startLine else 1
+        endLine   = if item.endLine   then item.endLine   else 1
+
+        startColumn = if item.startColumn then item.startColumn else 1
+        endColumn =   if item.endColumn   then item.endColumn   else 1
+
+        return {
+            type     : 'Error'
+            html     : item.message
+            range    : [[startLine - 1, startColumn - 1], [endLine - 1, endColumn]]
+            filePath : editor.getPath()
+        }
 
     ###*
      * @param {TextEditor} editor
