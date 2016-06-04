@@ -87,7 +87,7 @@ class IndexingProvider
                         "<strong>#{item.name}</strong> was not found."
                     )
 
-            if response.warnings.unusedUseStatements?
+            if response.warnings.unusedUseStatements? and response.errors.syntaxErrors?.length == 0
                 for item in response.warnings.unusedUseStatements
                     messages.push @createLinterMessageForOutputItem(
                         editor,
