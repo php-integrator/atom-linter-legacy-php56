@@ -6,7 +6,7 @@ module.exports =
         showUnknownClasses:
             title       : 'Show unknown classes'
             description : '''
-                Highlights clas names that could not be found. This will also work for docblocks.
+                Highlights class names that could not be found. This will also work for docblocks.
             '''
             type        : 'boolean'
             default     : true
