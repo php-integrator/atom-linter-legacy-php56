@@ -209,8 +209,13 @@ class IndexingProvider
      * @return {Object}
     ###
     createLinterMessageForOutputItem: (editor, item, type, html) ->
-        startPoint = editor.getBuffer().positionForCharacterIndex(item.start)
-        endPoint   = editor.getBuffer().positionForCharacterIndex(item.end)
+        text =  editor.getBuffer().getText()
+
+        startCharacterOffset = @service.getCharacterOffsetFromByteOffset(item.start, text)
+        endCharacterOffset   = @service.getCharacterOffsetFromByteOffset(item.end, text)
+
+        startPoint = editor.getBuffer().positionForCharacterIndex(startCharacterOffset)
+        endPoint   = editor.getBuffer().positionForCharacterIndex(endCharacterOffset)
 
         return {
             type     : type

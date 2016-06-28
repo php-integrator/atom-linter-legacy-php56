@@ -1,3 +1,6 @@
+## 1.0.1
+* Fixed warning and error offsets when using Unicode characters.
+
 ## 1.0.0 (base 1.0.0)
 * Don't show unused use statements when there are syntax errors.
   * Sometimes a syntax error results in a statement being ignored, in turn causing the linter to mark a use statement incorrectly as unused. This mitigates that behavior.
