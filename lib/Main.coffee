@@ -12,6 +12,15 @@ module.exports =
             default     : true
             order       : 1
 
+        showUnknownMembers:
+            title       : 'Show unknown members'
+            description : '''
+                Highlights class members that could not be found.
+            '''
+            type        : 'boolean'
+            default     : true
+            order       : 2
+
         showUnusedUseStatements:
             title       : 'Show unused use statements'
             description : '''
@@ -19,7 +28,7 @@ module.exports =
             '''
             type        : 'boolean'
             default     : true
-            order       : 2
+            order       : 3
 
         validateDocblockCorrectness:
             title       : 'Validate docblock correctness'
@@ -30,8 +39,8 @@ module.exports =
             '''
             type        : 'boolean'
             default     : true
-            order       : 3
-
+            order       : 4
+            
     ###*
      * The name of the package.
     ###

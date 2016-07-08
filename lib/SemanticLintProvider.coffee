@@ -87,6 +87,31 @@ class IndexingProvider
                         "<strong>#{item.name}</strong> was not found."
                     )
 
+            if response.errors.unknownMembers?
+                for item in response.errors.unknownMembers.expressionHasNoType
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Error',
+                        "The member <strong>#{item.memberName}</strong> could not be found because the expression has no type."
+                    )
+
+                for item in response.errors.unknownMembers.expressionIsNotClasslike
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Error',
+                        "<strong>#{item.expressionType}</strong> can not be used as an object, so the member <strong>#{item.memberName}</strong> does not exist."
+                    )
+
+                for item in response.errors.unknownMembers.expressionHasNoSuchMember
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Error',
+                        "The member <strong>#{item.memberName}</strong> does not exist for type <strong>#{item.expressionType}</strong>."
+                    )
+
             if response.warnings.unusedUseStatements? and response.errors.syntaxErrors?.length == 0
                 for item in response.warnings.unusedUseStatements
                     messages.push @createLinterMessageForOutputItem(
@@ -174,6 +199,7 @@ class IndexingProvider
 
         options = {
             noUnknownClasses      : not @config.get('showUnknownClasses')
+            noUnknownMembers      : not @config.get('showUnknownMembers')
             noDocblockCorrectness : not @config.get('validateDocblockCorrectness')
             noUnusedUseStatements : not @config.get('showUnusedUseStatements')
         }

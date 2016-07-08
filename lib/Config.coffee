@@ -23,6 +23,7 @@ class Config
 
         @data =
             showUnknownClasses          : true
+            showUnknownMembers          : true
             showUnusedUseStatements     : true
             validateDocblockCorrectness : true
 

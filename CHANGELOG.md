@@ -1,3 +1,6 @@
+## 1.1.0
+* Unknown class members are now displayed.
+
 ## 1.0.1
 * Fixed warning and error offsets when using Unicode characters.
 
