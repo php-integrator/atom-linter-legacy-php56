@@ -25,6 +25,7 @@ class AtomConfig extends Config
     load: () ->
         @set('showUnknownClasses', atom.config.get("#{@packageName}.showUnknownClasses"))
         @set('showUnknownMembers', atom.config.get("#{@packageName}.showUnknownMembers"))
+        @set('showUnknownGlobalFunctions', atom.config.get("#{@packageName}.showUnknownGlobalFunctions"))
         @set('showUnusedUseStatements', atom.config.get("#{@packageName}.showUnusedUseStatements"))
         @set('validateDocblockCorrectness', atom.config.get("#{@packageName}.validateDocblockCorrectness"))
 
@@ -37,6 +38,9 @@ class AtomConfig extends Config
 
         atom.config.onDidChange "#{@packageName}.showUnknownMembers", () =>
             @set('showUnknownMembers', atom.config.get("#{@packageName}.showUnknownMembers"))
+
+        atom.config.onDidChange "#{@packageName}.showUnknownGlobalFunctions", () =>
+            @set('showUnknownGlobalFunctions', atom.config.get("#{@packageName}.showUnknownGlobalFunctions"))
 
         atom.config.onDidChange "#{@packageName}.showUnusedUseStatements", () =>
             @set('showUnusedUseStatements', atom.config.get("#{@packageName}.showUnusedUseStatements"))

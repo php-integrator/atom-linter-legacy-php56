@@ -120,6 +120,15 @@ class IndexingProvider
                         "The member <strong>#{item.memberName}</strong> was not explicitly defined for type <strong>#{item.expressionType}</strong>."
                     )
 
+            if response.errors.unknownGlobalFunctions?
+                for item in response.errors.unknownGlobalFunctions
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Error',
+                        "The global function <strong>#{item.name}</strong> was not found."
+                    )
+
             if response.warnings.unusedUseStatements? and response.errors.syntaxErrors?.length == 0
                 for item in response.warnings.unusedUseStatements
                     messages.push @createLinterMessageForOutputItem(

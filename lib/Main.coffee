@@ -21,6 +21,15 @@ module.exports =
             default     : true
             order       : 2
 
+        showUnknownGlobalFunctions:
+            title       : 'Show unknown global functions'
+            description : '''
+                Highlights global functions that could not be found.
+            '''
+            type        : 'boolean'
+            default     : true
+            order       : 3
+
         showUnusedUseStatements:
             title       : 'Show unused use statements'
             description : '''
@@ -28,7 +37,7 @@ module.exports =
             '''
             type        : 'boolean'
             default     : true
-            order       : 3
+            order       : 4
 
         validateDocblockCorrectness:
             title       : 'Validate docblock correctness'
@@ -39,8 +48,8 @@ module.exports =
             '''
             type        : 'boolean'
             default     : true
-            order       : 4
-            
+            order       : 5
+
     ###*
      * The name of the package.
     ###

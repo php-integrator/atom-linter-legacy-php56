@@ -13,6 +13,7 @@ This package is not meant to be a replacement for existing PHP linters, but more
 What is included?
   * Shows docblock issues.
   * Shows usage of unknown class members.
+  * Shows usage of unknown global functions.
   * Shows warnings about unused use statements.
   * Shows erroneous class names that can't be resolved.
   * Shows errors returned by the base service's indexing process.
