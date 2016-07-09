@@ -14,6 +14,7 @@ What is included?
   * Shows docblock issues.
   * Shows usage of unknown class members.
   * Shows usage of unknown global functions.
+  * Shows usage of unknown global constants.
   * Shows warnings about unused use statements.
   * Shows erroneous class names that can't be resolved.
   * Shows errors returned by the base service's indexing process.

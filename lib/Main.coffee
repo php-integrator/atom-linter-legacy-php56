@@ -30,6 +30,15 @@ module.exports =
             default     : true
             order       : 3
 
+        showUnknownGlobalConstants:
+            title       : 'Show unknown global constants'
+            description : '''
+                Highlights global constants that could not be found.
+            '''
+            type        : 'boolean'
+            default     : true
+            order       : 4
+
         showUnusedUseStatements:
             title       : 'Show unused use statements'
             description : '''
@@ -37,7 +46,7 @@ module.exports =
             '''
             type        : 'boolean'
             default     : true
-            order       : 4
+            order       : 5
 
         validateDocblockCorrectness:
             title       : 'Validate docblock correctness'
@@ -48,7 +57,7 @@ module.exports =
             '''
             type        : 'boolean'
             default     : true
-            order       : 5
+            order       : 6
 
     ###*
      * The name of the package.

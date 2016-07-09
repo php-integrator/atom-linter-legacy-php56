@@ -25,6 +25,7 @@ class Config
             showUnknownClasses          : true
             showUnknownMembers          : true
             showUnknownGlobalFunctions  : true
+            showUnknownGlobalConstants  : true
             showUnusedUseStatements     : true
             validateDocblockCorrectness : true
 

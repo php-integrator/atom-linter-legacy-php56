@@ -129,6 +129,15 @@ class IndexingProvider
                         "The global function <strong>#{item.name}</strong> was not found."
                     )
 
+            if response.errors.unknownGlobalConstants?
+                for item in response.errors.unknownGlobalConstants
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Error',
+                        "The global constant <strong>#{item.name}</strong> was not found."
+                    )
+
             if response.warnings.unusedUseStatements? and response.errors.syntaxErrors?.length == 0
                 for item in response.warnings.unusedUseStatements
                     messages.push @createLinterMessageForOutputItem(
