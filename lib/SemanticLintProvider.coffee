@@ -111,6 +111,14 @@ class IndexingProvider
                         'Error',
                         "The member <strong>#{item.memberName}</strong> does not exist for type <strong>#{item.expressionType}</strong>."
                     )
+            if response.warnings.unknownMembers?
+                for item in response.warnings.unknownMembers.expressionNewMemberWillBeCreated
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Warning',
+                        "The member <strong>#{item.memberName}</strong> was not explicitly defined for type <strong>#{item.expressionType}</strong>."
+                    )
 
             if response.warnings.unusedUseStatements? and response.errors.syntaxErrors?.length == 0
                 for item in response.warnings.unusedUseStatements
