@@ -101,7 +101,7 @@ class IndexingProvider
                         editor,
                         item,
                         'Error',
-                        "<strong>#{item.expressionType}</strong> can not be used as an object, so the member <strong>#{item.memberName}</strong> does not exist."
+                        "Type <strong>#{item.expressionType}</strong> does not have a member <strong>#{item.memberName}</strong>."
                     )
 
                 for item in response.errors.unknownMembers.expressionHasNoSuchMember
