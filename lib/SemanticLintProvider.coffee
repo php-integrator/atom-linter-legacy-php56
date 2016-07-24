@@ -57,6 +57,7 @@ class IndexingProvider
             editor = @findTextEditorByPath(response.path)
 
             return if not editor?
+            return if not @indieLinter?
 
             @semanticLint(editor)
 
@@ -64,6 +65,7 @@ class IndexingProvider
             editor = @findTextEditorByPath(response.path)
 
             return if not editor?
+            return if not @indieLinter?
 
             @semanticLint(editor)
 
