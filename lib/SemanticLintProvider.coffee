@@ -143,8 +143,6 @@ class IndexingProvider
             noDocblockCorrectness    : not @config.get('validateDocblockCorrectness')
         }
 
-        debugger
-
         return @service.semanticLint(path, source, options)
 
     ###*
