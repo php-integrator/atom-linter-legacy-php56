@@ -15,7 +15,7 @@ module.exports =
         showUnknownMembers:
             title       : 'Show unknown members'
             description : '''
-                Highlights class members that could not be found.
+                Highlights class members that could not be found. Note that this can a large strain on performance.
             '''
             type        : 'boolean'
             default     : true
