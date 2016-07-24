@@ -2,6 +2,7 @@
 * Unknown global functions are now displayed.
 * Unknown global constants are now displayed.
 * Unknown class members are now displayed (disabled by default).
+* Linting will now less aggressively respond to every index. This prevents a flood of linting processes being spawned if the file being linted is long and many edits are being made (subsequently causing quick successive reindexes).
 
 ## 1.0.1
 * Fixed warning and error offsets when using Unicode characters.
