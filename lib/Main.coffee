@@ -18,7 +18,7 @@ module.exports =
                 Highlights class members that could not be found. Note that this can a large strain on performance.
             '''
             type        : 'boolean'
-            default     : true
+            default     : false
             order       : 2
 
         showUnknownGlobalFunctions:
