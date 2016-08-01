@@ -65,11 +65,6 @@ module.exports =
     packageName: 'php-integrator-linter'
 
     ###*
-     * The name of the package.
-    ###
-    packageName: 'php-integrator-linter'
-
-    ###*
      * The configuration object.
     ###
     configuration: null
