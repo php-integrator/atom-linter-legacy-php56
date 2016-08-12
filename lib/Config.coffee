@@ -27,6 +27,7 @@ class Config
             showUnknownGlobalFunctions  : true
             showUnknownGlobalConstants  : true
             showUnusedUseStatements     : true
+            showMissingDocs             : true
             validateDocblockCorrectness : true
 
         @load()

@@ -140,6 +140,7 @@ class IndexingProvider
             noUnknownGlobalFunctions : not @config.get('showUnknownGlobalFunctions')
             noUnknownGlobalConstants : not @config.get('showUnknownGlobalConstants')
             noUnusedUseStatements    : not @config.get('showUnusedUseStatements')
+            noMissingDocs            : not @config.get('showMissingDocs')
             noDocblockCorrectness    : not @config.get('validateDocblockCorrectness')
         }
 
