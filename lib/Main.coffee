@@ -49,9 +49,9 @@ module.exports =
             order       : 5
 
         showMissingDocs:
-            title       : 'Show missing phpdocumentations'
+            title       : 'Show missing documentation'
             description : '''
-                Highlights any missing php documentation on functions/methods/classes/fields.
+                Warns about any structural element that is currently missing documentation.
             '''
             type        : 'boolean'
             default     : true
