@@ -28,6 +28,7 @@ class AtomConfig extends Config
         @set('showUnknownGlobalFunctions', atom.config.get("#{@packageName}.showUnknownGlobalFunctions"))
         @set('showUnknownGlobalConstants', atom.config.get("#{@packageName}.showUnknownGlobalConstants"))
         @set('showUnusedUseStatements', atom.config.get("#{@packageName}.showUnusedUseStatements"))
+        @set('showMissingDocs', atom.config.get("#{@packageName}.showMissingDocs"))
         @set('validateDocblockCorrectness', atom.config.get("#{@packageName}.validateDocblockCorrectness"))
 
     ###*
@@ -48,6 +49,9 @@ class AtomConfig extends Config
 
         atom.config.onDidChange "#{@packageName}.showUnusedUseStatements", () =>
             @set('showUnusedUseStatements', atom.config.get("#{@packageName}.showUnusedUseStatements"))
+
+        atom.config.onDidChange "#{@packageName}.showMissingDocs", () =>
+            @set('showMissingDocs', atom.config.get("#{@packageName}.showMissingDocs"))
 
         atom.config.onDidChange "#{@packageName}.validateDocblockCorrectness", () =>
             @set('validateDocblockCorrectness', atom.config.get("#{@packageName}.validateDocblockCorrectness"))

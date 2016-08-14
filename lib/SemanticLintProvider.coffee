@@ -236,13 +236,14 @@ class IndexingProvider
                     "The docblock for <strong>#{item.name}</strong> is missing a @var tag."
                 )
 
-            for item in response.warnings.docblockIssues.missingDocumentation
-                messages.push @createLinterMessageForOutputItem(
-                    editor,
-                    item,
-                    'Warning',
-                    "Documentation for <strong>#{item.name}</strong> is missing."
-                )
+            if @config.get('showMissingDocs')
+                for item in response.warnings.docblockIssues.missingDocumentation
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Warning',
+                        "Documentation for <strong>#{item.name}</strong> is missing."
+                    )
 
             for item in response.warnings.docblockIssues.parameterMissing
                 messages.push @createLinterMessageForOutputItem(

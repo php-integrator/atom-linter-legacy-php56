@@ -48,6 +48,15 @@ module.exports =
             default     : true
             order       : 5
 
+        showMissingDocs:
+            title       : 'Show missing phpdocumentations'
+            description : '''
+                Highlights any missing php documentation on functions/methods/classes/fields.
+            '''
+            type        : 'boolean'
+            default     : true
+            order       : 6
+
         validateDocblockCorrectness:
             title       : 'Validate docblock correctness'
             description : '''
