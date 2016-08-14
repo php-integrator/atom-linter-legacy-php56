@@ -140,7 +140,6 @@ class IndexingProvider
             noUnknownGlobalFunctions : not @config.get('showUnknownGlobalFunctions')
             noUnknownGlobalConstants : not @config.get('showUnknownGlobalConstants')
             noUnusedUseStatements    : not @config.get('showUnusedUseStatements')
-            noMissingDocs            : not @config.get('showMissingDocs')
             noDocblockCorrectness    : not @config.get('validateDocblockCorrectness')
         }
 
@@ -237,13 +236,14 @@ class IndexingProvider
                     "The docblock for <strong>#{item.name}</strong> is missing a @var tag."
                 )
 
-            for item in response.warnings.docblockIssues.missingDocumentation
-                messages.push @createLinterMessageForOutputItem(
-                    editor,
-                    item,
-                    'Warning',
-                    "Documentation for <strong>#{item.name}</strong> is missing."
-                )
+            if @config.get('showMissingDocs')
+                for item in response.warnings.docblockIssues.missingDocumentation
+                    messages.push @createLinterMessageForOutputItem(
+                        editor,
+                        item,
+                        'Warning',
+                        "Documentation for <strong>#{item.name}</strong> is missing."
+                    )
 
             for item in response.warnings.docblockIssues.parameterMissing
                 messages.push @createLinterMessageForOutputItem(
