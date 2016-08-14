@@ -66,7 +66,7 @@ module.exports =
             '''
             type        : 'boolean'
             default     : true
-            order       : 6
+            order       : 7
 
     ###*
      * The name of the package.
