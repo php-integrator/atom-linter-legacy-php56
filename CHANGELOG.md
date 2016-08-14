@@ -1,3 +1,6 @@
+## 1.2.0
+* It is now possible to disable warnings about missing documentation (thanks to [@hultberg](https://github.com/hultberg)).
+
 ## 1.1.0
 * Unknown global functions are now displayed.
 * Unknown global constants are now displayed.
