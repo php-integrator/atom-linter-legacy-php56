@@ -1,3 +1,6 @@
+## 1.2.1
+* Rename the package and repository.
+
 ## 1.2.0
 * It is now possible to disable warnings about missing documentation (thanks to [@hultberg](https://github.com/hultberg)).
 
