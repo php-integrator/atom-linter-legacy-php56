@@ -12,15 +12,6 @@ module.exports =
             default     : true
             order       : 1
 
-        showUnknownMembers:
-            title       : 'Show unknown members'
-            description : '''
-                Highlights class members that could not be found. Note that this can a large strain on performance.
-            '''
-            type        : 'boolean'
-            default     : false
-            order       : 2
-
         showUnknownGlobalFunctions:
             title       : 'Show unknown global functions'
             description : '''
@@ -28,7 +19,7 @@ module.exports =
             '''
             type        : 'boolean'
             default     : true
-            order       : 3
+            order       : 2
 
         showUnknownGlobalConstants:
             title       : 'Show unknown global constants'
@@ -37,7 +28,7 @@ module.exports =
             '''
             type        : 'boolean'
             default     : true
-            order       : 4
+            order       : 3
 
         showUnusedUseStatements:
             title       : 'Show unused use statements'
@@ -46,7 +37,7 @@ module.exports =
             '''
             type        : 'boolean'
             default     : true
-            order       : 5
+            order       : 4
 
         showMissingDocs:
             title       : 'Show missing documentation'
@@ -55,7 +46,7 @@ module.exports =
             '''
             type        : 'boolean'
             default     : true
-            order       : 6
+            order       : 5
 
         validateDocblockCorrectness:
             title       : 'Validate docblock correctness'
@@ -66,6 +57,15 @@ module.exports =
             '''
             type        : 'boolean'
             default     : true
+            order       : 6
+
+        showUnknownMembers:
+            title       : 'Show unknown members'
+            description : '''
+                Highlights class members that could not be found. Note that this can a large strain on performance.
+            '''
+            type        : 'boolean'
+            default     : false
             order       : 7
 
     ###*
