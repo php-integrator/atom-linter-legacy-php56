@@ -62,7 +62,8 @@ module.exports =
         showUnknownMembers:
             title       : 'Show unknown members (experimental)'
             description : '''
-                Highlights class members that could not be found. Note that this can a large strain on performance.
+                Highlights class members that could not be found. Note that this can be a large strain on performance.
+                It is also experimental and might show false positives (especially inside conditionals).
             '''
             type        : 'boolean'
             default     : false
