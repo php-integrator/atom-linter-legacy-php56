@@ -60,7 +60,7 @@ module.exports =
             order       : 6
 
         showUnknownMembers:
-            title       : 'Show unknown members'
+            title       : 'Show unknown members (experimental)'
             description : '''
                 Highlights class members that could not be found. Note that this can a large strain on performance.
             '''
