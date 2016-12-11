@@ -1,3 +1,6 @@
+## 1.3.0 (base 2.0.0)
+* Mark `show unknown members` as experimental.
+
 ## 1.2.1
 * Rename the package and repository.
 
