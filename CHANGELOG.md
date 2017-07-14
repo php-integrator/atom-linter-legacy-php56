@@ -1,3 +1,6 @@
+## 1.3.1
+* Rename package to demarcate legacy status.
+
 ## 1.3.0 (base 2.0.0)
 * Mark `show unknown members` as experimental.
 
