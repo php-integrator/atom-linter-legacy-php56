@@ -1,9 +1,4 @@
 # php-integrator/atom-linter-legacy-php56
-<p align="right">
-:coffee:
-<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YKTNLZCRHMRTJ">Send me some coffee beans</a>
-</p>
-
 ## Legacy
 This is a legacy version that requires PHP >= 5.6. Users that are on PHP 7.1 can and should use [the newer version](https://github.com/php-integrator/atom-base).
 
